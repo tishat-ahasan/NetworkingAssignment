@@ -16,21 +16,19 @@ public class Server{
     Socket socket;
     ServerSocket serverSocket;
 
-    Server(int store_port,String bank_ip,int bank_port)throws Exception {
+    File htmlFile;
+    File file;
+
+
+    Server()throws Exception {
 
         String responseMessage="";
         responseMessage = ProcessHTML("index.html");
-        try {
-            serverSocket = new ServerSocket(store_port);
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);
-        }
+        serverSocket = new ServerSocket(50000);
         while (true){
             try {
 
-                //System.out.println("before");
+                System.out.println("before");
                 socket = serverSocket.accept();
 
                 InputStream inputStream = socket.getInputStream();
@@ -48,7 +46,7 @@ public class Server{
                     }
 
 
-                    //System.out.println("line 70 -------->" + receivedMessage);
+                    System.out.println("line 70 -------->" + receivedMessage);
 
                     String receivedMessageArray[] = receivedMessage.split(" ");
 
@@ -88,7 +86,7 @@ public class Server{
                         System.out.println("PURA b[] te ki ache dekhi nicer line e---------- >");
 
                         String userInfo = new String(b);
-                        StoreClient storeClient = new StoreClient(bank_ip,bank_port,userInfo);
+                        StoreClient storeClient = new StoreClient("127.0.0.1",5000,userInfo);
                         String result = storeClient.getResult();
                         //System.out.println(userInfo);
                         // "NoUser","NoMoney" ,"Success"
@@ -149,23 +147,5 @@ public class Server{
         message += data;
         System.out.println(message);
         return message;
-    }
-
-    public static void main(String args[]) {
-
-        int STORE_PORT=5000,BANK_PORT=6000;
-        String BANK_IP = "";
-        if (args.length==3)
-        {
-            STORE_PORT = Integer.parseInt(args[0]);
-            BANK_IP = args[1];
-            BANK_PORT = Integer.parseInt(args[2]);
-        }
-        try {
-            new Server(STORE_PORT,BANK_IP,BANK_PORT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 }
